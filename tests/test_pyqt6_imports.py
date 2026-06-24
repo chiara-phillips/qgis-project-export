@@ -3,10 +3,6 @@
 This catches short-form Qt enum regressions (for example ``Qt.AlignCenter``
 instead of ``Qt.AlignmentFlag.AlignCenter``) which raise ``AttributeError`` in
 PyQt6 during class-body evaluation.
-
-The plugin package is auto-discovered: the first sibling directory of
-``tests/`` that contains a ``metadata.txt`` is treated as the plugin root,
-so this file does not need to be edited per-plugin.
 """
 
 import importlib
@@ -15,27 +11,12 @@ import pathlib
 import pytest
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
+PLUGIN_ROOT = REPO_ROOT / "project_export"
 
-
-def _find_plugin_root() -> pathlib.Path:
-    """Return the plugin package directory (the one with metadata.txt)."""
-    candidates = [
-        p.parent for p in REPO_ROOT.glob("*/metadata.txt") if p.parent.name != "tests"
-    ]
-    if not candidates:
-        raise RuntimeError(
-            "Could not locate a QGIS plugin package (no */metadata.txt found "
-            f"under {REPO_ROOT})."
-        )
-    if len(candidates) > 1:
-        raise RuntimeError(
-            f"Multiple plugin packages found under {REPO_ROOT}: {candidates}. "
-            "Set PLUGIN_ROOT explicitly in this file."
-        )
-    return candidates[0]
-
-
-PLUGIN_ROOT = _find_plugin_root()
+if not (PLUGIN_ROOT / "metadata.txt").is_file():
+    raise RuntimeError(
+        f"Expected plugin package at {PLUGIN_ROOT} (metadata.txt not found)."
+    )
 
 
 def _module_names():
