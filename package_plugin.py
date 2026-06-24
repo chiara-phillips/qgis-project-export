@@ -3,7 +3,7 @@
 Package the QGIS plugin for upload to the official QGIS plugin repository.
 
 This script creates a zip file with the following characteristics:
-- Root folder renamed from 'plugin_template' to the target plugin name
+- Root folder uses the target plugin package name (default: ``project_export``)
 - Excludes generated files (ui_*.py, resources_rc.py, etc.)
 - Excludes __MACOSX, .git, __pycache__, and other hidden directories
 - Excludes .pyc files and other compiled Python files
@@ -100,16 +100,16 @@ def get_version_from_metadata(plugin_dir: Path) -> str:
 def package_plugin(
     source_dir: Path,
     output_path: Path | None = None,
-    target_name: str = "plugin_template",
+    target_name: str = "project_export",
     include_version: bool = True,
 ) -> Path:
     """
     Package the QGIS plugin into a zip file.
 
     Args:
-        source_dir: Path to the plugin_template directory
+        source_dir: Path to the plugin source directory
         output_path: Optional path for the output zip file
-        target_name: Name for the root folder in the zip (default: 'plugin_template')
+        target_name: Name for the root folder in the zip (default: ``project_export``)
         include_version: Whether to include version in the zip filename
 
     Returns:
@@ -241,21 +241,21 @@ def main():
         "-o",
         type=Path,
         default=None,
-        help="Output path for the zip file (default: plugin_template-{version}.zip in the same folder as this script)",
+        help="Output path for the zip file (default: project_export-{version}.zip)",
     )
     parser.add_argument(
         "--source",
         "-s",
         type=Path,
         default=None,
-        help="Source directory (default: plugin_template in the same folder as this script)",
+        help="Source directory (default: project_export in the repository root)",
     )
     parser.add_argument(
         "--name",
         "-n",
         type=str,
-        default="plugin_template",
-        help="Target plugin name for the zip root folder (default: plugin_template)",
+        default="project_export",
+        help="Target plugin name for the zip root folder (default: project_export)",
     )
     parser.add_argument(
         "--no-version",
@@ -272,7 +272,7 @@ def main():
 
     # Determine source directory
     script_dir = Path(__file__).parent.resolve()
-    source_dir = args.source if args.source else script_dir / "plugin_template"
+    source_dir = args.source if args.source else script_dir / "project_export"
 
     try:
         # Create the package
