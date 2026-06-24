@@ -19,9 +19,9 @@ jobs:
         runs-on: ubuntu-latest
         env:
             TAG: ${{ github.event.release.tag_name || inputs.tag }}
-            PLUGIN_DIR: plugin_template
-            PLUGIN_NAME: plugin_template
-            ZIP_PATH: dist/plugin_template.zip
+            PLUGIN_DIR: project_export
+            PLUGIN_NAME: project_export
+            ZIP_PATH: dist/project_export.zip
         steps:
             - uses: actions/checkout@v6
 

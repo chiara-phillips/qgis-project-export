@@ -28,7 +28,7 @@ jobs:
             - name: Install Bandit
               run: pip install bandit
             - name: Run Bandit (matches plugins.qgis.org security scan)
-              run: bandit -r plugin_template
+              run: bandit -r project_export
 
     pyqt6-smoke:
         name: PyQt6 import smoke

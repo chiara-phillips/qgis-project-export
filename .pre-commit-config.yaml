@@ -35,5 +35,5 @@ repos:
       rev: 1.9.4
       hooks:
           - id: bandit
-            args: ["-r", "plugin_template"]
+            args: ["-r", "project_export"]
             pass_filenames: false
