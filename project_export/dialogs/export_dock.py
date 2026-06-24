@@ -157,15 +157,11 @@ class ExportDockWidget(QDockWidget):
         ignore_index = self.naming_mode_combo.findData(NAMING_MODE_IGNORE)
         if ignore_index >= 0:
             self.naming_mode_combo.setCurrentIndex(ignore_index)
-        self.naming_mode_combo.currentIndexChanged.connect(
-            self._on_naming_mode_changed
-        )
+        self.naming_mode_combo.currentIndexChanged.connect(self._on_naming_mode_changed)
         naming_layout.addWidget(self.naming_mode_combo)
 
         self.naming_text_input = QLineEdit()
-        self.naming_text_input.setPlaceholderText(
-            f"e.g. {DEFAULT_NAME_SUFFIX}"
-        )
+        self.naming_text_input.setPlaceholderText(f"e.g. {DEFAULT_NAME_SUFFIX}")
         naming_layout.addWidget(self.naming_text_input)
         form.addRow("File name", naming_layout)
 
