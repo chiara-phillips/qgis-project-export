@@ -1,0 +1,34 @@
+[general]
+name=Project Export
+qgisMinimumVersion=3.28
+qgisMaximumVersion=4.99
+description=Export all layers from a QGIS project to a folder with optional processing and a packaged project file.
+version=0.1.0
+author=Chiara Phillips
+
+about=Export vector and raster layers from the current QGIS project to a folder.
+
+    Features:
+    - Export all project layers to a chosen output folder
+    - Optional geometry repair, reprojection, and file renaming
+    - Optional packaged QGIS project (.qgz) referencing the exported layers
+
+tracker=https://github.com/chiara-phillips/qgis-project-export/issues
+repository=https://github.com/chiara-phillips/qgis-project-export
+
+hasProcessingProvider=no
+
+tags=export, project, layers, vector, raster
+
+homepage=https://github.com/chiara-phillips/qgis-project-export
+category=Plugins
+icon=icons/icon.svg
+
+experimental=False
+deprecated=False
+
+changelog=
+    0.1.0 - Initial release
+        - Export all project layers to a folder
+        - Optional fix geometries, reproject, and rename files
+        - Optional packaged QGIS project file

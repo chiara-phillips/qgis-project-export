@@ -20,6 +20,7 @@ PyQtCore = pytest.importorskip("PyQt6.QtCore")
 PyQtGui = pytest.importorskip("PyQt6.QtGui")
 PyQtNetwork = pytest.importorskip("PyQt6.QtNetwork")
 PyQtWidgets = pytest.importorskip("PyQt6.QtWidgets")
+PyQtXml = pytest.importorskip("PyQt6.QtXml")
 
 
 def _make_strict_module(name: str, attrs: dict) -> types.ModuleType:
@@ -64,10 +65,56 @@ class _Qgis:
     MessageLevel = _MessageLevel
 
 
-class _QgsBlockingNetworkRequest:
-    """Stand-in for ``qgis.core.QgsBlockingNetworkRequest``."""
+class _QgsCoordinateReferenceSystem:
+    """Stand-in for ``qgis.core.QgsCoordinateReferenceSystem``."""
 
-    NoError = 0
+    def __init__(self, authid: str = "") -> None:
+        self._authid = authid
+
+    def isValid(self) -> bool:
+        return bool(self._authid)
+
+    def authid(self) -> str:
+        return self._authid
+
+
+class _QgsLayerTreeGroup:
+    """Minimal stand-in for ``qgis.core.QgsLayerTreeGroup``."""
+
+    def children(self) -> list:
+        return []
+
+
+class _QgsLayerTree:
+    """Minimal stand-in for ``qgis.core.QgsLayerTree``."""
+
+    @staticmethod
+    def isLayer(_child) -> bool:
+        return False
+
+    @staticmethod
+    def isGroup(_child) -> bool:
+        return False
+
+
+class _QgsVectorLayer:
+    """Stand-in for ``qgis.core.QgsVectorLayer``."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
+    def isValid(self) -> bool:
+        return False
+
+
+class _QgsRasterLayer:
+    """Stand-in for ``qgis.core.QgsRasterLayer``."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
+    def isValid(self) -> bool:
+        return False
 
 
 def _install_qgis_stub() -> None:
@@ -85,6 +132,7 @@ def _install_qgis_stub() -> None:
         "QtGui": PyQtGui,
         "QtNetwork": PyQtNetwork,
         "QtWidgets": PyQtWidgets,
+        "QtXml": PyQtXml,
     }
     for name, real in pyqt_submodules.items():
         alias = types.ModuleType(f"qgis.PyQt.{name}")
@@ -107,13 +155,30 @@ def _install_qgis_stub() -> None:
         {
             "Qgis": _Qgis,
             "QgsMessageLog": types.SimpleNamespace(logMessage=lambda *a, **kw: None),
-            "QgsBlockingNetworkRequest": _QgsBlockingNetworkRequest,
+            "QgsMapLayer": type("QgsMapLayer", (), {}),
             "QgsProject": types.SimpleNamespace(instance=lambda: None),
-            "QgsMapLayerProxyModel": types.SimpleNamespace(),
+            "QgsCoordinateReferenceSystem": _QgsCoordinateReferenceSystem,
+            "QgsLayerTree": _QgsLayerTree,
+            "QgsLayerTreeGroup": _QgsLayerTreeGroup,
+            "QgsVectorLayer": _QgsVectorLayer,
+            "QgsRasterLayer": _QgsRasterLayer,
         },
     )
     sys.modules["qgis.core"] = qgis_core
     qgis.core = qgis_core
+
+    qgis_gui = _make_strict_module(
+        "qgis.gui",
+        {
+            "QgsProjectionSelectionWidget": PyQtWidgets.QWidget,
+        },
+    )
+    sys.modules["qgis.gui"] = qgis_gui
+    qgis.gui = qgis_gui
+
+    qgis_processing = types.ModuleType("qgis.processing")
+    sys.modules["qgis.processing"] = qgis_processing
+    qgis.processing = qgis_processing
 
 
 _install_qgis_stub()
