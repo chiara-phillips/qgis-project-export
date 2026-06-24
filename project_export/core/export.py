@@ -27,7 +27,6 @@ from ..constants import (
     RASTER_OUTPUT_EXTENSION,
 )
 
-
 ProgressCallback = Callable[[int, str], None]
 
 
@@ -155,7 +154,9 @@ def _vector_source_path(layer: QgsVectorLayer) -> Path | None:
     return None
 
 
-def _resolve_export_path(output_path: Path, source_path: Path | None) -> tuple[Path, bool]:
+def _resolve_export_path(
+    output_path: Path, source_path: Path | None
+) -> tuple[Path, bool]:
     """Choose a safe write path when export would overwrite the input file.
 
     Parameters
@@ -279,9 +280,7 @@ def _validate_exported_layer(result_path: Path, is_raster: bool) -> None:
         return
 
     error_detail = layer.error().message() if layer.error() else "unknown error"
-    raise ValueError(
-        f"Export produced unreadable file: {result_path} ({error_detail})"
-    )
+    raise ValueError(f"Export produced unreadable file: {result_path} ({error_detail})")
 
 
 def _load_layer_for_project(result_path: Path) -> QgsMapLayer:
@@ -679,14 +678,10 @@ def export_layer(
 
     if is_raster:
         raster_layer = processed_layer  # type: ignore[assignment]
-        result_path = _write_raster_layer(
-            raster_layer, output_path, write_crs, report
-        )
+        result_path = _write_raster_layer(raster_layer, output_path, write_crs, report)
     else:
         vector_layer = processed_layer  # type: ignore[assignment]
-        result_path = _write_vector_layer(
-            vector_layer, output_path, write_crs, report
-        )
+        result_path = _write_vector_layer(vector_layer, output_path, write_crs, report)
 
     report(100, f"Export complete: {result_path.name}")
     return result_path

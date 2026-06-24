@@ -70,11 +70,7 @@ def discover_qgis_plugin_dirs(default_only: bool = False) -> list[Path]:
         return [_legacy_default_plugin_dir()]
 
     plugin_dirs = sorted(
-        {
-            path
-            for path in base.glob("QGIS*/profiles/*/python/plugins")
-            if path.is_dir()
-        }
+        {path for path in base.glob("QGIS*/profiles/*/python/plugins") if path.is_dir()}
     )
     if plugin_dirs:
         return plugin_dirs
@@ -166,9 +162,7 @@ def remove_plugin(plugin_dir: Path, plugin_name: str = "project_export") -> bool
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Install or remove Project Export"
-    )
+    parser = argparse.ArgumentParser(description="Install or remove Project Export")
     parser.add_argument(
         "--remove",
         action="store_true",
